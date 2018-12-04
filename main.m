@@ -81,17 +81,29 @@ yunit = r * sin(th) + y;
 h = plot(xunit, yunit);
 hold off
 
+function update(p)
+display(p)
+
+function remove_plots(x)
+arrayfun(@(y) delete(y), x)
+
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 rect = getrect(handles.axes1);
+
+prompt = {'Enter a value of rotation \theta (in radians)'};
+title = 'Theta Value';
+definput = {'30'};
+opts.Interpreter = 'tex';
+theta = inputdlg(prompt,title,[1 60],definput,opts);
+theta = str2double(theta{:,1})
+R = [cos(theta) -sin(theta); sin(theta) cos(theta)];
+
 verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)];
-% r = rectangle(handles.axes1, 'Position',rect)
-% rotate(r, 45, [0,0])
-r = impoly(handles.axes1, verts);
-setVerticesDraggable(r,0);
+r = imrect(handles.axes1, rect);
 a = rect(3) / 2;
 b = rect(4) / 2;
 h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2));
@@ -101,6 +113,7 @@ sc2 = circle(root(1) - h, root(2), a - h);
 k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b);
 bc1 = circle(root(1), root(2) + k, b + k);
 bc2 = circle(root(1), root(2) - k, b + k);
+% id = addNewPositionCallback(r,@(p) update(p))
 
 % --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)
