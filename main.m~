@@ -95,4 +95,3 @@ b = rect(4) / 2
 h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2))
 root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)]
 circle(root(1) + h, root(2), a - h)
-circle(root(1) - h, root(2), a - h)
