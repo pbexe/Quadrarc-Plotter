@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 04-Dec-2018 11:37:47
+% Last Modified by GUIDE v2.5 04-Dec-2018 11:57:50
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -86,17 +86,25 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-rect = getrect(handles.axes1)
-verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)]
+rect = getrect(handles.axes1);
+verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)];
 % r = rectangle(handles.axes1, 'Position',rect)
 % rotate(r, 45, [0,0])
 r = impoly(handles.axes1, verts);
-a = rect(3) / 2
-b = rect(4) / 2
-h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2))
-root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)]
-sc1 = circle(root(1) + h, root(2), a - h)
-sc2 = circle(root(1) - h, root(2), a - h)
-k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b)
-bc1 = circle(root(1), root(2) + k, b + k)
-bc2 = circle(root(1), root(2) - k, b + k)
+setVerticesDraggable(r,0);
+a = rect(3) / 2;
+b = rect(4) / 2;
+h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2));
+root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)];
+sc1 = circle(root(1) + h, root(2), a - h);
+sc2 = circle(root(1) - h, root(2), a - h);
+k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b);
+bc1 = circle(root(1), root(2) + k, b + k);
+bc2 = circle(root(1), root(2) - k, b + k);
+
+% --- Executes on button press in pushbutton4.
+function pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+cla(handles.axes1)
