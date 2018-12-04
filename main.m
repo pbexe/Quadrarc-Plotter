@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 04-Dec-2018 11:17:19
+% Last Modified by GUIDE v2.5 04-Dec-2018 11:37:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,6 +72,7 @@ function varargout = main_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
+% --- From https://uk.mathworks.com/matlabcentral/answers/98665-how-do-i-plot-a-circle-with-a-given-radius-and-center
 function h = circle(x,y,r)
 hold on
 th = 0:pi/50:2*pi;
@@ -94,5 +95,8 @@ a = rect(3) / 2
 b = rect(4) / 2
 h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2))
 root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)]
-circle(root(1) + h, root(2), a - h)
-circle(root(1) - h, root(2), a - h)
+sc1 = circle(root(1) + h, root(2), a - h)
+sc2 = circle(root(1) - h, root(2), a - h)
+k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b)
+bc1 = circle(root(1), root(2) + k, b + k)
+bc2 = circle(root(1), root(2) - k, b + k)
