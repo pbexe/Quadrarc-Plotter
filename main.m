@@ -72,6 +72,7 @@ function varargout = main_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
+
 % --- From https://uk.mathworks.com/matlabcentral/answers/98665-how-do-i-plot-a-circle-with-a-given-radius-and-center
 function h = circle(x,y,r)
 hold on
@@ -85,11 +86,15 @@ hold off
 function remove_plots(x)
 arrayfun(@(y) delete(y), x)
 
+
 function o = rotate(centre, verts, theta)
 R = [cosd(theta) -sind(theta); sind(theta) cosd(theta)];
 c = centre - verts;
 c = c * R;
 o = centre + c;
+
+function p = redraw(p)
+disp(p);
 
 
 % --- Executes on button press in pushbutton3.
@@ -108,26 +113,28 @@ theta = inputdlg(prompt,title,[1 60],definput,opts);
 theta = str2double(theta{:,1})
 
 % Set up coords
-verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)]
-a = rect(3) / 2
-b = rect(4) / 2
-h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2))
-root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)]
-k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b)
+verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)];
+a = rect(3) / 2;
+b = rect(4) / 2;
+h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2));
+root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)];
+k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b);
 
 % Do the rotation
 verts = rotate(root, verts, theta);
-r = impoly(handles.axes1, verts);
 sc1_loc = rotate(root, [root(1) + h, root(2)], theta);
 sc2_loc = rotate(root, [root(1) - h, root(2)], theta);
 bc1_loc = rotate(root, [root(1), root(2) + k], theta);
 bc2_loc = rotate(root, [root(1), root(2) - k], theta);
 
-sc1 = circle(sc1_loc(1), sc1_loc(2), a - h)
-sc2 = circle(sc2_loc(1), sc2_loc(2), a - h)
-bc1 = circle(bc1_loc(1), bc1_loc(2), b + k)
-bc2 = circle(bc2_loc(1), bc2_loc(2), b + k)
-% id = addNewPositionCallback(r,@(p) update(p, sc1, sc2, bc1, bc2, handles))
+% Draw the shapes
+r = impoly(handles.axes1, verts);
+sc1 = circle(sc1_loc(1), sc1_loc(2), a - h);
+sc2 = circle(sc2_loc(1), sc2_loc(2), a - h);
+bc1 = circle(bc1_loc(1), bc1_loc(2), b + k);
+bc2 = circle(bc2_loc(1), bc2_loc(2), b + k);
+id = addNewPositionCallback(r,@(p) delete([sc1, sc2, bc1, bc2]));
+id2 = addNewPositionCallback(r,@(p) redraw(p));
 
 % --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)
