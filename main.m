@@ -146,6 +146,7 @@ sc2_loc = rotate(root, [root(1) - h, root(2)], theta);
 bc1_loc = rotate(root, [root(1), root(2) + k], theta);
 bc2_loc = rotate(root, [root(1), root(2) - k], theta);
 
+
 % Draw the shapes
 r = impoly(handles.axes1, verts);
 sc1 = circle(sc1_loc(1), sc1_loc(2), a - h);
