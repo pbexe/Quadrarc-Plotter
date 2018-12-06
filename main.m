@@ -93,28 +93,12 @@ c = centre - verts;
 c = c * R;
 o = centre + c;
 
-function redraw(rect, theta, handles)
-verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)];
-a = rect(3) / 2;
-b = rect(4) / 2;
-h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2));
-root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)];
-k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b);
-
-% Do the rotation
-verts = rotate(root, verts, theta);
-sc1_loc = rotate(root, [root(1) + h, root(2)], theta);
-sc2_loc = rotate(root, [root(1) - h, root(2)], theta);
-bc1_loc = rotate(root, [root(1), root(2) + k], theta);
-bc2_loc = rotate(root, [root(1), root(2) - k], theta);
-
-% Draw the shapes
-r = impoly(handles.axes1, verts);
-sc1 = circle(sc1_loc(1), sc1_loc(2), a - h);
-sc2 = circle(sc2_loc(1), sc2_loc(2), a - h);
-bc1 = circle(bc1_loc(1), bc1_loc(2), b + k);
-bc2 = circle(bc2_loc(1), bc2_loc(2), b + k);
-
+function i = intersect(a, h, k, r)
+x = h * (((a - h)/(sqrt(k^2 + h^2))) + 1);
+y = k * ((a - h)/(sqrt(k^2 + h^2)));
+x = x + r(1);
+y = y + r(2);
+i = [x y]
 
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
@@ -129,7 +113,7 @@ title = 'Theta Value';
 definput = {'0'};
 opts.Interpreter = 'tex';
 theta = inputdlg(prompt,title,[1 60],definput,opts);
-theta = str2double(theta{:,1})
+theta = str2double(theta{:,1});
 
 % Set up coords
 verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)];
@@ -153,8 +137,19 @@ sc1 = circle(sc1_loc(1), sc1_loc(2), a - h);
 sc2 = circle(sc2_loc(1), sc2_loc(2), a - h);
 bc1 = circle(bc1_loc(1), bc1_loc(2), b + k);
 bc2 = circle(bc2_loc(1), bc2_loc(2), b + k);
-id = addNewPositionCallback(r,@(p) delete([sc1, sc2, bc1, bc2]));
-id2 = addNewPositionCallback(r,@(p) redraw(rect, theta, handles));
+i = intersect(a,h,k,root)
+inter1 = rotate(root, [i(1), i(2)], theta);
+inter2 = rotate(root, [i(1), i(2) -  2 * abs(i(2) - root(2))], theta);
+inter3 = rotate(root, [i(1) -  2 * abs(i(1) - root(1)), i(2)], theta);
+inter4 = rotate(root, [i(1) -  2 * abs(i(1) - root(1)), i(2) -  2 * abs(i(2) - root(2))], theta);
+
+hold on;
+plot(inter1(1), inter1(2), 'b*');
+plot(inter2(1), inter2(2), 'b*');
+plot(inter3(1), inter3(2), 'b*');
+plot(inter4(1), inter4(2), 'b*');
+% id = addNewPositionCallback(r,@(p) delete([sc1, sc2, bc1, bc2]));
+% id2 = addNewPositionCallback(r,@(p) redraw(rect, theta, handles));
 
 % --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)
