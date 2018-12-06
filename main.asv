@@ -82,12 +82,14 @@ yunit = r * sin(th) + y;
 h = plot(xunit, yunit);
 hold off
 
-function h = arcGenerator(x,y,r,theta)
+function h = arcGenerator(x,y,r,start,stop, root)
 hold on
-th = 90:pi/50:theta+90;
-xunit = r * cosd(th) + x;
-yunit = r * sind(th) + y;
-h = rot90(cat(1, xunit, yunit));
+th = 0.5*pi:pi/50:(stop-start)+0.5*pi;
+xunit = r * cos(th) + x;
+yunit = r * sin(th) + y;
+coords = cat(1, xunits, y)
+h = rotate(root, [xunit, yunit], stop);
+1 + 1;
 hold off
 
 
@@ -145,7 +147,7 @@ sc1 = circle(sc1_loc(1), sc1_loc(2), a - h);
 sc2 = circle(sc2_loc(1), sc2_loc(2), a - h);
 bc1 = circle(bc1_loc(1), bc1_loc(2), b + k);
 bc2 = circle(bc2_loc(1), bc2_loc(2), b + k);
-i = intersect(a,h,k,root);
+i = intersect(a,h,k,root)
 inter1 = rotate(root, [i(1), i(2)], theta);
 inter2 = rotate(root, [i(1), i(2) -  2 * abs(i(2) - root(2))], theta);
 inter3 = rotate(root, [i(1) -  2 * abs(i(1) - root(1)), i(2)], theta);
@@ -156,9 +158,7 @@ plot(inter1(1), inter1(2), 'b*');
 plot(inter2(1), inter2(2), 'b*');
 plot(inter3(1), inter3(2), 'b*');
 plot(inter4(1), inter4(2), 'b*');
-c = arcGenerator(20, 20, 10, 270);
-hold on
-plot(c(:, 1), c(:, 2));
+plot(arcGenerator(20, 20, 10, 0.5*pi, 1.5 * pi, root));
 % id = addNewPositionCallback(r,@(p) delete([sc1, sc2, bc1, bc2]));
 % id2 = addNewPositionCallback(r,@(p) redraw(rect, theta, handles));
 
