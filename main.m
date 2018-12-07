@@ -147,7 +147,7 @@ r = impoly(handles.axes1, verts);
 sc1 = circle(sc1_loc(1), sc1_loc(2), a - h);
 sc2 = circle(sc2_loc(1), sc2_loc(2), a - h);
 bc1 = circle(bc1_loc(1), bc1_loc(2), b + k);
-% bc2 = circle(bc2_loc(1), bc2_loc(2), b + k);
+bc2 = circle(bc2_loc(1), bc2_loc(2), b + k);
 i = intersect(a,h,k,root);
 inter1 = [i(1), i(2)];
 inter2 = [i(1), i(2) -  2 * abs(i(2) - root(2))];
@@ -158,25 +158,27 @@ inter2_rot = rotate(root, [i(1), i(2) -  2 * abs(i(2) - root(2))], theta);
 inter3_rot = rotate(root, [i(1) -  2 * abs(i(1) - root(1)), i(2)], theta);
 inter4_rot = rotate(root, [i(1) -  2 * abs(i(1) - root(1)), i(2) -  2 * abs(i(2) - root(2))], theta);
 hold on;
-%plot(inter1(1), inter1(2), 'g.');
-plot(inter2(1), inter2(2), 'g.');
-%plot(inter3(1), inter3(2), 'g.');
-plot(inter4(1), inter4(2), 'g.');
+plot(inter1(1), inter1(2), 'g*', 'LineWidth', 3);
+plot(inter2(1), inter2(2), 'g*', 'LineWidth', 3);
+plot(inter3(1), inter3(2), 'g*', 'LineWidth', 3);
+plot(inter4(1), inter4(2), 'g*', 'LineWidth', 3);
 
-
+% Calculate the quadrarcs
 sc2ang1 = calcAngle(sc2_loc, inter1);
 sc2ang2 = calcAngle(sc2_loc, inter2);
-
 bc1ang1 = calcAngle(bc1_loc, inter1);
 bc1ang2 = calcAngle(bc1_loc, inter3);
+sc1_arc = rotate(sc1_loc, arcGenerator(sc1_loc(1), sc1_loc(2), a - h, sc2ang1, sc2ang2), 90);
+sc2_arc = rotate(sc2_loc, arcGenerator(sc2_loc(1), sc2_loc(2), a - h, sc2ang1, sc2ang2), -90);
+bc1_arc = rotate(bc1_loc, arcGenerator(bc1_loc(1), bc1_loc(2), b + k, 0, bc1ang1 * 2), 90 - bc1ang2);
+bc2_arc = rotate(bc2_loc, arcGenerator(bc2_loc(1), bc2_loc(2), b + k, 0, bc1ang1 * 2), 270 - bc1ang2);
 
-sc1 = rotate(sc1_loc, arcGenerator(sc1_loc(1), sc1_loc(2), a - h, sc2ang1, sc2ang2), 90);
-sc2 = rotate(sc2_loc, arcGenerator(sc2_loc(1), sc2_loc(2), a - h, sc2ang1, sc2ang2), -90);
-
+% Plot the quadrarcs
 hold on;
-plot(sc1(:, 1), sc1(:, 2), 'r-', 'LineWidth', 2);
-plot(sc2(:, 1), sc2(:, 2), 'r-', 'LineWidth', 2);
-plot(bc1(:, 1), bc1(:, 2), 'r-', 'LineWidth', 2);
+plot(sc1_arc(:, 1), sc1_arc(:, 2), 'r-', 'LineWidth', 2);
+plot(sc2_arc(:, 1), sc2_arc(:, 2), 'r-', 'LineWidth', 2);
+plot(bc1_arc(:, 1), bc1_arc(:, 2), 'r-', 'LineWidth', 2);
+plot(bc2_arc(:, 1), bc2_arc(:, 2), 'r-', 'LineWidth', 2);
 % id = addNewPositionCallback(r,@(p) delete([sc1, sc2, bc1, bc2]));
 % id2 = addNewPositionCallback(r,@(p) redraw(rect, theta, handles));
 
