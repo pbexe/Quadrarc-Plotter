@@ -198,8 +198,9 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
 % Load
 
-
-
+[file,path] = uigetfile
+a = hgload(file)
+handles.axis1 = a
 
 % --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
