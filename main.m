@@ -206,9 +206,10 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
 % Load
 
-[file,path] = uigetfile
-a = hgload(file)
-handles.axis1 = a
+file = uigetfile('*.fig');
+close(handles.figure1)
+a = openfig(file);
+
 
 % --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
@@ -217,7 +218,7 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Save
-filter = {'*.qrc'};
-[file,path] = uiputfile(filter)
-hgsave(handles.axes1, file)
+filter = {'*.fig'};
+file = uiputfile(filter);
+savefig(file);
 
