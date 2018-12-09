@@ -82,6 +82,8 @@ yunit = r * sin(th) + y;
 h = plot(xunit, yunit);
 hold off
 
+% --- Generates the points of an arc with the specified start and stop
+% angles
 function h = arcGenerator(x,y,r,start, stop)
 hold on
 th = start:pi/50:stop;
@@ -91,16 +93,15 @@ h = rot90(cat(1, xunit, yunit));
 hold off
 
 
-function remove_plots(x)
-arrayfun(@(y) delete(y), x)
-
-
+% --- Rotates a set of vertices around a point
 function o = rotate(centre, verts, theta)
 R = [cosd(theta) -sind(theta); sind(theta) cosd(theta)];
 c = centre - verts;
 c = c * R;
 o = centre + c;
 
+
+% --- Finds the intersection of the small and large circles
 function i = intersect(a, h, k, r)
 x = h * (((a - h)/(sqrt(k^2 + h^2))) + 1);
 y = k * ((a - h)/(sqrt(k^2 + h^2)));
@@ -108,8 +109,11 @@ x = x + r(1);
 y = y + r(2);
 i = [x y];
 
+
+% --- Calculates the angle between 2 points
 function theta = calcAngle(a, b)
 theta = 90 - rad2deg(atan2(b(2) - a(2), b(1) - a(1)));
+
 
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
@@ -134,12 +138,16 @@ h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 
 root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)];
 k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b);
 
-% Do the rotation
+% Do the rotation of the circles
 verts = rotate(root, verts, theta);
 sc1_loc = rotate(root, [root(1) + h, root(2)], theta);
 sc2_loc = rotate(root, [root(1) - h, root(2)], theta);
 bc1_loc = rotate(root, [root(1), root(2) + k], theta);
 bc2_loc = rotate(root, [root(1), root(2) - k], theta);
+sc1_loc_straight = rotate(root, [root(1) + h, root(2)], 0);
+sc2_loc_straight = rotate(root, [root(1) - h, root(2)], 0);
+bc1_loc_straight = rotate(root, [root(1), root(2) + k], 0);
+bc2_loc_straight = rotate(root, [root(1), root(2) - k], 0);
 
 
 % Draw the basic shapes
@@ -158,20 +166,20 @@ inter2_rot = rotate(root, [i(1), i(2) -  2 * abs(i(2) - root(2))], theta);
 inter3_rot = rotate(root, [i(1) -  2 * abs(i(1) - root(1)), i(2)], theta);
 inter4_rot = rotate(root, [i(1) -  2 * abs(i(1) - root(1)), i(2) -  2 * abs(i(2) - root(2))], theta);
 hold on;
-plot(inter1(1), inter1(2), 'g*', 'LineWidth', 3);
-plot(inter2(1), inter2(2), 'g*', 'LineWidth', 3);
-plot(inter3(1), inter3(2), 'g*', 'LineWidth', 3);
-plot(inter4(1), inter4(2), 'g*', 'LineWidth', 3);
+plot(inter1_rot(1), inter1_rot(2), 'g*', 'LineWidth', 3);
+plot(inter2_rot(1), inter2_rot(2), 'g*', 'LineWidth', 3);
+plot(inter3_rot(1), inter3_rot(2), 'g*', 'LineWidth', 3);
+plot(inter4_rot(1), inter4_rot(2), 'g*', 'LineWidth', 3);
 
 % Calculate the quadrarcs
-sc2ang1 = calcAngle(sc2_loc, inter1);
-sc2ang2 = calcAngle(sc2_loc, inter2);
-bc1ang1 = calcAngle(bc1_loc, inter1);
-bc1ang2 = calcAngle(bc1_loc, inter3);
-sc1_arc = rotate(sc1_loc, arcGenerator(sc1_loc(1), sc1_loc(2), a - h, sc2ang1, sc2ang2), 90);
-sc2_arc = rotate(sc2_loc, arcGenerator(sc2_loc(1), sc2_loc(2), a - h, sc2ang1, sc2ang2), -90);
-bc1_arc = rotate(bc1_loc, arcGenerator(bc1_loc(1), bc1_loc(2), b + k, 0, bc1ang1 * 2), 90 - bc1ang2);
-bc2_arc = rotate(bc2_loc, arcGenerator(bc2_loc(1), bc2_loc(2), b + k, 0, bc1ang1 * 2), 270 - bc1ang2);
+sc2ang1 = calcAngle(sc2_loc_straight, inter1);
+sc2ang2 = calcAngle(sc2_loc_straight, inter2);
+bc1ang1 = calcAngle(bc1_loc_straight, inter1);
+bc1ang2 = calcAngle(bc1_loc_straight, inter3);
+sc1_arc = rotate(sc1_loc, arcGenerator(sc1_loc(1), sc1_loc(2), a - h, sc2ang1, sc2ang2), 90 + theta);
+sc2_arc = rotate(sc2_loc, arcGenerator(sc2_loc(1), sc2_loc(2), a - h, sc2ang1, sc2ang2), -90 + theta);
+bc1_arc = rotate(bc1_loc, arcGenerator(bc1_loc(1), bc1_loc(2), b + k, 0, bc1ang1 * 2), 90 - bc1ang2 + theta);
+bc2_arc = rotate(bc2_loc, arcGenerator(bc2_loc(1), bc2_loc(2), b + k, 0, bc1ang1 * 2), 270 - bc1ang2 + theta);
 
 % Plot the quadrarcs
 hold on;
