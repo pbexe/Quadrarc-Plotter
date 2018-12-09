@@ -100,6 +100,8 @@ c = centre - verts;
 c = c * R;
 o = centre + c;
 
+
+% --- Finds the intersection of the small and large circles
 function i = intersect(a, h, k, r)
 x = h * (((a - h)/(sqrt(k^2 + h^2))) + 1);
 y = k * ((a - h)/(sqrt(k^2 + h^2)));
@@ -107,8 +109,11 @@ x = x + r(1);
 y = y + r(2);
 i = [x y];
 
+
+% --- Calculates the angle between 2 points
 function theta = calcAngle(a, b)
 theta = 90 - rad2deg(atan2(b(2) - a(2), b(1) - a(1)));
+
 
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
@@ -125,15 +130,23 @@ opts.Interpreter = 'tex';
 theta = inputdlg(prompt,title,[1 60],definput,opts);
 theta = str2double(theta{:,1});
 
-% Set up coords
+root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)];
 verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)];
+if rect(4) > rect(3)
+    rot_verts = rotate(root, verts, 90)
+    rect(1) = rot_verts(1,1)
+    rect(2) = rot_verts()
+    theta = theta + 90
+end
+
+% Set up coords
 a = rect(3) / 2;
 b = rect(4) / 2;
 h = ((a - b) * (a + b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(a - b + sqrt(a ^ 2 + 6 * a * b + b ^ 2));
-root = [rect(1) + (rect(3) / 2), rect(2) + (rect(4) / 2)];
+
 k = ((a - b) * (a + 3 * b + sqrt(a ^ 2 + 6 * a * b + b ^ 2)))/(4 * b);
 
-% Do the rotation
+% Do the rotation of the circles
 verts = rotate(root, verts, theta);
 sc1_loc = rotate(root, [root(1) + h, root(2)], theta);
 sc2_loc = rotate(root, [root(1) - h, root(2)], theta);
@@ -201,9 +214,10 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
 % Load
 
-[file,path] = uigetfile
-a = hgload(file)
-handles.axis1 = a
+file = uigetfile('*.fig');
+close(handles.figure1)
+a = openfig(file);
+
 
 % --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
@@ -212,7 +226,7 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Save
-filter = {'*.qrc'};
-[file,path] = uiputfile(filter)
-hgsave(handles.axes1, file)
+filter = {'*.fig'};
+file = uiputfile(filter);
+savefig(file);
 

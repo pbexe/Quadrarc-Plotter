@@ -129,6 +129,14 @@ definput = {'0'};
 opts.Interpreter = 'tex';
 theta = inputdlg(prompt,title,[1 60],definput,opts);
 theta = str2double(theta{:,1});
+if rect(4) > rect(3)
+    temp = rect(3);
+    rect(3) = rect(4);
+    rect(4) = temp;
+    theta = theta + 90;
+    rect(1) = rect(1) - (rect(3) / 2) + (rect(4)/2);
+    rect(2) = rect(2) - (rect(4) / 2) + (rect(3)/2); 
+end
 
 % Set up coords
 verts = [rect(1), rect(2); rect(1) + rect(3), rect(2); rect(1) + rect(3), rect(2) + rect(4); rect(1), rect(2) + rect(4)];
