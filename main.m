@@ -215,7 +215,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % Load
 
 file = uigetfile('*.fig');
-close(handles.figure1)
+close(handles.figure1);
 a = openfig(file);
 
 
